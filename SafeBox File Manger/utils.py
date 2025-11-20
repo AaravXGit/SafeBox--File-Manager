@@ -45,3 +45,28 @@ def ensure_config_exists():
     if not CONFIG_FILE.exists():
         with open(CONFIG_FILE, "w") as f:
             json.dump({}, f)
+
+
+# --- Ask user for encryption/decryption key ---
+import tkinter as tk
+from tkinter import simpledialog
+
+def ask_key(prompt="Enter key:"):
+    root = tk.Tk()
+    root.withdraw()  # hide main window
+    key = simpledialog.askstring("Security", prompt, show="*")
+    root.destroy()
+    return key
+
+
+def compression_stats(file_path, compressed_data):
+    import os
+    original_size = os.path.getsize(file_path)
+    compressed_size = len(compressed_data)
+    saved = ((original_size - compressed_size) / original_size) * 100 if original_size != 0 else 0
+
+    return {
+        "original_size": original_size,
+        "compressed_size": compressed_size,
+        "saved_percent": round(saved, 2)
+    }
